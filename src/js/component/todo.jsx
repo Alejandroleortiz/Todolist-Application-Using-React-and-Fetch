@@ -12,7 +12,7 @@ const Todo = () => {
 
 
 	const getTodo = () => {
-		const url = "https://assets.breatheco.de/apis/fake/todos/user/alejandroleortiz";
+		const url = "https://assets.breatheco.de/apis/fake/todos/user";
 		const options = {
 			method: "GET",
 			headers: {
@@ -20,7 +20,7 @@ const Todo = () => {
 			},
 			//body: JSON.stringify(data),
 		}
-		fetch(url, options)
+		fetch(`${url}/alejandroleortiz`, options)
 			.then(respuesta => {
 				if (respuesta.status >= 200 && respuesta.status < 300) {
 					console.log("La peticion se hizo correctamente");
@@ -53,7 +53,7 @@ const Todo = () => {
 	}
 
 	const addTodo = async (newList) => {
-		const url = "https://assets.breatheco.de/apis/fake/todos/user/alejandroleortiz";
+		const url = "https://assets.breatheco.de/apis/fake/todos/user";
 		const options = {
 			method: "PUT",
 			headers: {
@@ -63,7 +63,7 @@ const Todo = () => {
 		}
 
 		try {
-			const reponse = await fetch(url, options)
+			const reponse = await fetch(`${url}/alejandroleortiz`, options)
 			const data = await reponse.json();
 			console.log("newList guardado");
 			console.log(data);
