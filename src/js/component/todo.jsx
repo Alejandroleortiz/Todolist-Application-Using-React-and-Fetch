@@ -34,7 +34,7 @@ const Todo = () => {
 				setTodos(data); // guardar en el estado
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				console.log(error);
 			});
 	}
 
