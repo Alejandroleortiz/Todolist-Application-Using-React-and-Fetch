@@ -42,34 +42,35 @@ const Todo = () => {
 
 
 	const [text, setText] = useState("") // Definir el useState para el imput
-	const [todos, setTodos] = useState({})           // Definir el Usestate para generar los li
+	const [todos, setTodos] = useState([])           // Definir el Usestate para generar los li
 
 	const generateTodo = (e) => { //evento para generar los todo
-		e.preventDefault();       //Funcion para prevenir que se recargue la p[agina]
+		e.preventDefault();       //Funcion para prevenir que se recargue la pagina
 		// setTodos([...todos, text]); // Desplegamos o concatenamos otra forma seria setTodos(todos.concat([text]))
 		// setText(""); // Se genera el nuevo string dentro del array
-		let todo = { text: text }
-		if (todo !== '') addTodo(todo);
+		let todo = { label: text, done: false }
+		if (text !== '') addTodo([...todos, todo]);
 	}
 
-	const addTodo = async (todo) => {
+	const addTodo = async (newList) => {
 		const url = "https://assets.breatheco.de/apis/fake/todos/user/alejandroleortiz";
 		const options = {
-			method: "POST",
+			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(todo),
+			body: JSON.stringify(newList),
 		}
 
 		try {
 			const reponse = await fetch(url, options)
 			const data = await reponse.json();
-			console.log("todo grardado");
+			console.log("newList guardado");
 			console.log(data);
 
-			if (data.label){
-				setTodos((prevState)=>[...prevState, data])
+			if (data.result) {
+				// setTodos((prevState)=>[...prevState, newList])
+				setTodos(newList);
 				setText('')
 			}
 
@@ -95,17 +96,24 @@ const Todo = () => {
 							/>
 						</form>
 					</li>
-					{/* {todos.map((t, i) => (
-						<li className="border" key={i}>
+					{todos.map((t, i) =>
+					(<li className="border" key={i}>
 
-							<div className="d-flex justify-content-between">
-								<span>{t}</span>
-								<TiDelete className="iconColor" onClick={() => setTodos(todos.filter((t, currentIndex) => i !== currentIndex))} />
-							</div>
-						</li>
-					))} */}
+						<div className="d-flex justify-content-between">
+							<span>{t.label}</span>
+							<TiDelete className="iconColor" onClick={() => {
+								addTodo(todos.filter((t, currentIndex) => i !== currentIndex))
+								setTodos(todos.filter((t, currentIndex) => i !== currentIndex))
+							}} />
+						</div>
+					</li>)
+					)}
 				</ul>
 				<div>{todos.length} item{todos.length === 1 ? '' : 's'} left</div>
+				<button type="button" className="btn btn-success my-3" onClick={() => {
+								addTodo([])
+								setTodos([])
+							}}>Clear All</button>
 			</div>
 		</>
 	);
