@@ -39,13 +39,45 @@ const Todo = () => {
 	}
 
 
-	const [inputValue, setInputValue] = useState("") // Definir el useState para el imput
+
+
+	const [text, setText] = useState("") // Definir el useState para el imput
 	const [todos, setTodos] = useState({})           // Definir el Usestate para generar los li
 
 	const generateTodo = (e) => { //evento para generar los todo
 		e.preventDefault();       //Funcion para prevenir que se recargue la p[agina]
-		setTodos([...todos, inputValue]); // Desplegamos o concatenamos otra forma seria setTodos(todos.concat([inputValue]))
-		setInputValue(""); // Se genera el nuevo string dentro del array
+		// setTodos([...todos, text]); // Desplegamos o concatenamos otra forma seria setTodos(todos.concat([text]))
+		// setText(""); // Se genera el nuevo string dentro del array
+		let todo = { text: text }
+		if (todo !== '') addTodo(todo);
+	}
+
+	const addTodo = async (todo) => {
+		const url = "https://assets.breatheco.de/apis/fake/todos/user/alejandroleortiz";
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(todo),
+		}
+
+		try {
+			const reponse = await fetch(url, options)
+			const data = await reponse.json();
+			console.log("todo grardado");
+			console.log(data);
+
+			if (data.label){
+				setTodos((prevState)=>[...prevState, data])
+				setText('')
+			}
+
+
+		}
+		catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (
@@ -56,8 +88,8 @@ const Todo = () => {
 					<li className="border">
 						<form onSubmit={generateTodo}>
 							<input
-								value={inputValue}
-								onChange={(event) => setInputValue(event.target.value)}
+								value={text}
+								onChange={(event) => setText(event.target.value)}
 								type="text"
 								placeholder="What do you need to do?"
 							/>
