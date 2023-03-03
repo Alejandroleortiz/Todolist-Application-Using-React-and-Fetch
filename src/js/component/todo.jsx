@@ -52,6 +52,34 @@ const Todo = () => {
 		if (text !== '') addTodo([...todos, todo]);
 	}
 
+	const updateTodo = async (todo) => {
+		const url = "https://assets.breatheco.de/apis/fake/todos/user";
+		const options = {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(todo),
+		}
+
+		try {
+			const reponse = await fetch(`${url}/alejandroleortiz`, options)
+			const data = await reponse.json();
+			console.log("todo guardado");
+			console.log(data);
+
+			if (data.result) {
+				setTodos((prevState)=>[...prevState, todo])
+			
+			}
+
+
+		}
+		catch (error) {
+			console.log(error);
+		}
+	}
+
 	const addTodo = async (newList) => {
 		const url = "https://assets.breatheco.de/apis/fake/todos/user";
 		const options = {
