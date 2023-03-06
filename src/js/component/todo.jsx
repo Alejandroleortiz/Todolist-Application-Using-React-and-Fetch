@@ -36,7 +36,11 @@ const Todo = () => {
 		.then(data => {
 			//Aquí es donde debe comenzar tu código después de que finalice la búsqueda
 			console.log("Data recibida", data); //esto imprimirá en la consola el objeto exacto recibido del servidor
-			createTodo(data);
+			if(data.msg){
+				createTodo();
+			} else {
+				setTodos(data); 
+			}
 		});
 };
 
@@ -55,6 +59,7 @@ const createTodo = async () => {
 		const data = await reponse.json();
 		console.log("newList guardado");
 		console.log(data);
+		getTodo()
 	}
 	catch (error) {
 		console.log(error);
@@ -101,8 +106,7 @@ const createTodo = async () => {
 
 		fetch(`${url}/alejandroleortiz`, options)
 			.then(resp => resp.json())
-			.then(() => createTodo([]));
-			return setTodos([]); 
+			.then(() => createTodo());
 	};
 
 	return (
