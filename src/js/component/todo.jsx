@@ -90,6 +90,21 @@ const createTodo = async () => {
 		}
 	}
 
+	const clearAll = () => {
+		const url = "https://assets.breatheco.de/apis/fake/todos/user";
+		const options = {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}
+
+		fetch(`${url}/alejandroleortiz`, options)
+			.then(resp => resp.json())
+			.then(() => createTodo([]));
+			return setTodos([]); 
+	};
+
 	return (
 		<>
 			<div className="container col-5">
@@ -119,7 +134,7 @@ const createTodo = async () => {
 					)}
 				</ul>
 				<div>{todos.length} item{todos.length === 1 ? '' : 's'} left</div>
-				<button type="button" className="btn btn-success my-3" >Clear All</button>
+				<button type="button" className="btn btn-success my-3" onClick={clearAll} >Clear All</button>
 			</div>
 		</>
 	);
