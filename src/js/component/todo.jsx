@@ -37,9 +37,9 @@ const Todo = () => {
 			//Aquí es donde debe comenzar tu código después de que finalice la búsqueda
 			console.log("Data recibida", data); //esto imprimirá en la consola el objeto exacto recibido del servidor
 			if(data.msg){
-				createTodo();
+				createTodo(); // Genera la lista
 			} else {
-				setTodos(data); 
+				setTodos(data);  // Integra la lista para que nunca quede vacia 
 			}
 		});
 };
