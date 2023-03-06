@@ -4,7 +4,16 @@ import { TiDelete } from 'react-icons/ti';
 
 const Todo = () => {
 
+	const [text, setText] = useState("") // Definir el useState para el imput
+	const [todos, setTodos] = useState([])           // Definir el Usestate para generar los li
 
+	const generateTodo = (e) => { //evento para generar los todo
+		e.preventDefault();       //Funcion para prevenir que se recargue la pagina
+		// setTodos([...todos, text]); // Desplegamos o concatenamos otra forma seria setTodos(todos.concat([text]))
+		// setText(""); // Se genera el nuevo string dentro del array
+		let todo = { label: text, done: false }
+		if (text !== '') addTodo([...todos, todo]);
+	}
 
 	useEffect(() => {
 		getTodo();
@@ -21,64 +30,36 @@ const Todo = () => {
 			//body: JSON.stringify(data),
 		}
 		fetch(`${url}/alejandroleortiz`, options)
-			.then(respuesta => {
-				if (respuesta.status >= 200 && respuesta.status < 300) {
-					console.log("La peticion se hizo correctamente");
-					return respuesta.json();
-				} else {
-					console.log(`hubo un error en ${respuesta.status}`);
-				};
-			})
-			.then(data => {
-				console.log("Este es el body del request", data);
-				setTodos(data); // guardar en el estado
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		.then(
+			resp => resp.json()
+		)
+		.then(data => {
+			//Aquí es donde debe comenzar tu código después de que finalice la búsqueda
+			console.log("Data recibida", data); //esto imprimirá en la consola el objeto exacto recibido del servidor
+			createTodo(data);
+		});
+};
+
+const createTodo = async () => {
+	const url = "https://assets.breatheco.de/apis/fake/todos/user";
+	const options = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify([]),
 	}
 
-
-
-
-	const [text, setText] = useState("") // Definir el useState para el imput
-	const [todos, setTodos] = useState([])           // Definir el Usestate para generar los li
-
-	const generateTodo = (e) => { //evento para generar los todo
-		e.preventDefault();       //Funcion para prevenir que se recargue la pagina
-		// setTodos([...todos, text]); // Desplegamos o concatenamos otra forma seria setTodos(todos.concat([text]))
-		// setText(""); // Se genera el nuevo string dentro del array
-		let todo = { label: text, done: false }
-		if (text !== '') addTodo([...todos, todo]);
+	try {
+		const reponse = await fetch(`${url}/alejandroleortiz`, options)
+		const data = await reponse.json();
+		console.log("newList guardado");
+		console.log(data);
 	}
-
-	const updateTodo = async (todo) => {
-		const url = "https://assets.breatheco.de/apis/fake/todos/user";
-		const options = {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(todo),
-		}
-
-		try {
-			const reponse = await fetch(`${url}/alejandroleortiz`, options)
-			const data = await reponse.json();
-			console.log("todo guardado");
-			console.log(data);
-
-			if (data.result) {
-				setTodos((prevState)=>[...prevState, todo])
-			
-			}
-
-
-		}
-		catch (error) {
-			console.log(error);
-		}
+	catch (error) {
+		console.log(error);
 	}
+}
 
 	const addTodo = async (newList) => {
 		const url = "https://assets.breatheco.de/apis/fake/todos/user";
@@ -138,10 +119,7 @@ const Todo = () => {
 					)}
 				</ul>
 				<div>{todos.length} item{todos.length === 1 ? '' : 's'} left</div>
-				<button type="button" className="btn btn-success my-3" onClick={() => {
-								addTodo([])
-								setTodos([])
-							}}>Clear All</button>
+				<button type="button" className="btn btn-success my-3" >Clear All</button>
 			</div>
 		</>
 	);
